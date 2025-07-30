@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Particle Animation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: #000;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        
+        .text-overlay {
+            position: absolute;
+            text-align: center;
+            color: #ff69b4;
+            z-index: 10;
+            pointer-events: none;
+            text-shadow: 0 0 10px rgba(255, 105, 180, 0.7);
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 400;
+            animation: pulse 2s ease-in-out infinite alternate;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+        
+        .info {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            color: #fff;
+            font-size: 14px;
+            z-index: 20;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 12px;
+            border-radius: 10px;
+        }
+        
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 20;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 10px;
+            color: white;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .control-btn {
+            background: rgba(255, 105, 180, 0.3);
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255, 105, 180, 0.6);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.9; }
+            100% { transform: scale(1.03); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="text-overlay">
+        <h1>Heart Particle Animation</h1>
+        <div class="subtitle">Based on C++ math functions</div>
+    </div>
+    
+    <div class="controls">
+        <button id="pauseBtn" class="control-btn">Pause</button>
+        <button id="resetBtn" class="control-btn">Reset Particles</button>
+        <button id="heartBtn" class="control-btn">Explode Heart</button>
+    </div>
+    
+    <div class="info">Particles: <span id="particleCount">0</span></div>
+    
+    <canvas id="canvas"></canvas>
+
+    <script>
+        // Configuration parameters from C++ code
+        const IMAGE_ENLARGR = 15;
+        const POINTS_NUMBER = 2000;
+        const FREQUENCY = 50;
+        const DANCESIZE = 50;
+        const HEART_COLOR = "#ff69b4";
+        
+        // DOM references
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const particleCountElement = document.getElementById('particleCount');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const heartBtn = document.getElementById('heartBtn');
+        
+        // Set canvas to full window size
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
+        // Animation state
+        let isPlaying = true;
+        let frame = 0;
+        let points = [];
+        let edgeDiffusionPoints = [];
+        let centerDiffusionPoints = [];
+        
+        // ==================== C++ Function Implementations ====================
+        
+        // Heart function - same as heart_function in C++
+        function heart_function(t, shrink_ratio = IMAGE_ENLARGR) {
+            const x = 16 * (Math.sin(t) * Math.sin(t) * Math.sin(t));
+            const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+            return {
+                x: x * shrink_ratio,
+                y: y * shrink_ratio
+            };
+        }
+        
+        // Scatter_inside - same as in C++
+        function scatter_inside(point, beta = 0.05) {
+            const ratiox = -Math.log(Math.random()) * beta;
+            const ratioy = -Math.log(Math.random()) * beta;
+            const dx = point.x * ratiox;
+            const dy = point.y * ratioy;
+            return {
+                x: point.x - dx,
+                y: point.y - dy
+            };
+        }
+        
+        // Caculate_position - same as in C++
+        function calculate_position(point, ratio = 0.9) {
+            const force = 1 / Math.pow(point.x * point.x + point.y * point.y, 0.6);
+            const dx = point.x * force * ratio + (Math.random() * 2 - 1);
+            const dy = point.y * force * ratio + (Math.random() * 2 - 1);
+            return {
+                x: point.x - dx,
+                y: point.y - dy
+            };
+        }
+        
+        // Shrink_ratio - same as in C++
+        function shrink_ratio(point, ratio = 0.9) {
+            const force = 1 / Math.pow(point.x * point.x + point.y * point.y, 1);
+            const dx = point.x * force * ratio;
+            const dy = point.y * force * ratio;
+            return {
+                x: point.x - dx,
+                y: point.y - dy
+            };
+        }
+        
+        // Curve function - same as curve in C++
+        function curve(p) {
+            return 2 * (2 * Math.sin(4 * p)) / (2 * Math.PI);
+        }
+        
+        // ==================== Particle Initialization ====================
+        
+        function initPoints() {
+            points = [];
+            edgeDiffusionPoints = [];
+            centerDiffusionPoints = [];
+            
+            // Initialize heart points
+            for (let i = 0; i < POINTS_NUMBER; i++) {
+                const t = Math.random() * 2 * Math.PI;
+                const p = heart_function(t);
+                points.push(p);
+            }
+            
+            // Initialize edge diffusion points
+            for (let i = 0; i < POINTS_NUMBER; i++) {
+                const point = points[i];
+                for (let j = 0; j < 3; j++) {
+                    edgeDiffusionPoints.push(scatter_inside(point, 0.05));
+                }
+            }
+            
+            // Initialize center diffusion points
+            for (let i = 0; i < POINTS_NUMBER * 2; i++) {
+                const index = Math.floor(Math.random() * POINTS_NUMBER);
+                const p = scatter_inside(points[index], 0.17);
+                centerDiffusionPoints.push(p);
+            }
+            
+            particleCountElement.textContent = (points.length + edgeDiffusionPoints.length + centerDiffusionPoints.length).toLocaleString();
+        }
+        
+        // ==================== Animation Logic ====================
+        
+        function animate() {
+            if (!isPlaying) return;
+            
+            // Center coordinates (origin for our particles)
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            
+            // Clear the canvas
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.07)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Calculate current animation parameters
+            const animationRatio = frame / FREQUENCY * Math.PI;
+            const ratio = DANCESIZE * curve(animationRatio);
+            const haloRadius = 4 + 6 * (1 + curve(animationRatio));
+            const haloNumber = 3000 + 4000 * Math.abs(curve(animationRatio) * curve(animationRatio));
+            
+            // Draw halo particles
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+            for (let i = 0; i < haloNumber; i++) {
+                const t = Math.random() * 2 * Math.PI;
+                let p = heart_function(t, IMAGE_ENLARGR);
+                p = shrink_ratio(p, haloRadius);
+                p.x += centerX + (Math.random() * 28 - 14);
+                p.y += centerY + (Math.random() * 28 - 14);
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 1, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Draw particles
+            ctx.fillStyle = HEART_COLOR;
+            for (let point of points) {
+                let p = calculate_position(point, ratio);
+                p.x += centerX;
+                p.y += centerY;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Draw edge diffusion particles
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+            for (let point of edgeDiffusionPoints) {
+                let p = calculate_position(point, ratio);
+                p.x += centerX;
+                p.y += centerY;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 1, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Draw center diffusion particles
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            for (let point of centerDiffusionPoints) {
+                let p = calculate_position(point, ratio);
+                p.x += centerX;
+                p.y += centerY;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 1.2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            frame++;
+            requestAnimationFrame(animate);
+        }
+        
+        // ==================== Event Handlers ====================
+        
+        function createHeartExplosion() {
+            for (let i = 0; i < 50; i++) {
+                const t = Math.random() * 2 * Math.PI;
+                const p = heart_function(t);
+                points.push(p);
+            }
+            particleCountElement.textContent = (points.length + edgeDiffusionPoints.length + centerDiffusionPoints.length).toLocaleString();
+        }
+        
+        // Button event handlers
+        pauseBtn.addEventListener('click', () => {
+            isPlaying = !isPlaying;
+            pauseBtn.textContent = isPlaying ? 'Pause' : 'Play';
+            if (isPlaying) animate();
+        });
+        
+        resetBtn.addEventListener('click', () => {
+            frame = 0;
+            initPoints();
+        });
+        
+        heartBtn.addEventListener('click', createHeartExplosion);
+        
+        // ==================== Initialize and Start Animation ====================
+        
+        initPoints();
+        animate();
+    </script>
+</body>
+</html>
