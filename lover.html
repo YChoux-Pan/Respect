@@ -40,14 +40,14 @@
         }
         
         h1 {
-            font-size: 3rem;
+            font-size: clamp(2rem, 5vw, 3rem);
             margin-bottom: 1rem;
             font-weight: 400;
             animation: pulse 2s ease-in-out infinite alternate;
         }
         
         .subtitle {
-            font-size: 1.2rem;
+            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
             opacity: 0.8;
         }
         
@@ -61,6 +61,7 @@
             background: rgba(0, 0, 0, 0.5);
             padding: 8px 12px;
             border-radius: 10px;
+            pointer-events: none;
         }
         
         .controls {
@@ -74,6 +75,7 @@
             color: white;
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
         }
         
         .control-btn {
@@ -84,10 +86,184 @@
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
         }
         
         .control-btn:hover {
             background: rgba(255, 105, 180, 0.6);
+        }
+        
+        .config-panel {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 30;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+            width: 300px;
+            max-height: 90vh;
+            overflow-y: auto;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 105, 180, 0.3);
+            transform: translateX(calc(100% + 30px));
+            transition: transform 0.4s ease;
+        }
+        
+        .config-panel.visible {
+            transform: translateX(0);
+        }
+        
+        .panel-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 25;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 105, 180, 0.3);
+        }
+        
+        .panel-toggle:hover {
+            background: rgba(255, 105, 180, 0.3);
+        }
+        
+        .config-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .config-group {
+            margin-bottom: 15px;
+        }
+        
+        .config-group h3 {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            color: #ff69b4;
+            font-weight: 500;
+        }
+        
+        .param-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .param-label {
+            font-size: 0.9rem;
+            flex: 1;
+        }
+        
+        .param-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 105, 180, 0.3);
+            border-radius: 4px;
+            color: white;
+            padding: 5px 8px;
+            width: 100px;
+            text-align: center;
+        }
+        
+        .param-slider {
+            width: 120px;
+        }
+        
+        .color-preview {
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background-color: currentColor;
+            cursor: pointer;
+        }
+        
+        .save-preset {
+            background: rgba(255, 105, 180, 0.3);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .save-preset:hover {
+            background: rgba(255, 105, 180, 0.6);
+        }
+        
+        @media (max-width: 768px) {
+            .config-panel {
+                width: calc(100% - 40px);
+                max-height: 70vh;
+                top: 10px;
+                right: 10px;
+            }
+            
+            .controls {
+                left: 10px;
+                bottom: 10px;
+                padding: 8px;
+            }
+            
+            .info {
+                bottom: 10px;
+                right: 10px;
+                font-size: 12px;
+            }
+            
+            .text-overlay {
+                padding: 0 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .controls {
+                gap: 5px;
+            }
+            
+            .control-btn {
+                padding: 4px 8px;
+            }
+            
+            .config-panel {
+                padding: 12px;
+            }
+            
+            .param-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .param-slider {
+                width: 100%;
+                margin-top: 5px;
+            }
+            
+            .param-input {
+                width: 100%;
+                margin-top: 5px;
+            }
         }
         
         @keyframes pulse {
@@ -102,31 +278,119 @@
         <div class="subtitle">Based on C++ math functions</div>
     </div>
     
+    <button class="panel-toggle" id="panelToggle">⚙️</button>
+    
     <div class="controls">
         <button id="pauseBtn" class="control-btn">Pause</button>
         <button id="resetBtn" class="control-btn">Reset Particles</button>
         <button id="heartBtn" class="control-btn">Explode Heart</button>
     </div>
     
-    <div class="info">Particles: <span id="particleCount">0</span></div>
+    <div class="config-panel" id="configPanel">
+        <div class="config-header">
+            <h2>Animation Parameters</h2>
+            <button class="panel-toggle" id="closePanel">✕</button>
+        </div>
+        
+        <div class="config-group">
+            <h3>Heart Settings</h3>
+            <div class="param-row">
+                <span class="param-label">Heart Color</span>
+                <input type="color" id="heartColor" class="param-input" value="#ff69b4">
+                <div class="color-preview" style="background-color: #ff69b4;"></div>
+            </div>
+            <div class="param-row">
+                <span class="param-label">Heart Size</span>
+                <input type="range" min="5" max="30" value="15" class="param-slider" id="heartSize">
+                <input type="number" min="5" max="30" value="15" class="param-input" id="heartSizeInput">
+            </div>
+            <div class="param-row">
+                <span class="param-label">Frequency</span>
+                <input type="range" min="10" max="100" value="50" class="param-slider" id="frequency">
+                <input type="number" min="10" max="100" value="50" class="param-input" id="frequencyInput">
+            </div>
+        </div>
+        
+        <div class="config-group">
+            <h3>Particle Settings</h3>
+            <div class="param-row">
+                <span class="param-label">Particle Count</span>
+                <input type="range" min="500" max="10000" value="2000" step="500" class="param-slider" id="particleCountSlider">
+                <input type="number" min="500" max="10000" value="2000" class="param-input" id="particleCountInput">
+            </div>
+            <div class="param-row">
+                <span class="param-label">Dance Size</span>
+                <input type="range" min="10" max="100" value="50" class="param-slider" id="danceSize">
+                <input type="number" min="10" max="100" value="50" class="param-input" id="danceSizeInput">
+            </div>
+            <div class="param-row">
+                <span class="param-label">Core Particle Size</span>
+                <input type="range" min="0.5" max="3" step="0.1" value="1.5" class="param-slider" id="coreSize">
+                <input type="number" min="0.5" max="3" step="0.1" value="1.5" class="param-input" id="coreSizeInput">
+            </div>
+            <div class="param-row">
+                <span class="param-label">Edge Particle Size</span>
+                <input type="range" min="0.5" max="3" step="0.1" value="1" class="param-slider" id="edgeSize">
+                <input type="number" min="0.5" max="3" step="0.1" value="1" class="param-input" id="edgeSizeInput">
+            </div>
+            <div class="param-row">
+                <span class="param-label">Center Particle Size</span>
+                <input type="range" min="0.5" max="3" step="0.1" value="1.2" class="param-slider" id="centerSize">
+                <input type="number" min="0.5" max="3" step="0.1" value="1.2" class="param-input" id="centerSizeInput">
+            </div>
+        </div>
+        
+        <div class="config-group">
+            <h3>Background</h3>
+            <div class="param-row">
+                <span class="param-label">Background Color</span>
+                <input type="color" id="bgColor" class="param-input" value="#000000">
+                <div class="color-preview" style="background-color: #000000;"></div>
+            </div>
+            <div class="param-row">
+                <span class="param-label">Background Opacity</span>
+                <input type="range" min="0.01" max="0.2" step="0.01" value="0.07" class="param-slider" id="bgOpacity">
+                <input type="number" min="0.01" max="0.2" step="0.01" value="0.07" class="param-input" id="bgOpacityInput">
+            </div>
+        </div>
+        
+        <button class="save-preset" id="savePreset">Save Current Settings</button>
+    </div>
+    
+    <div class="info">Particles: <span id="particleCountDisplay">0</span></div>
     
     <canvas id="canvas"></canvas>
 
     <script>
-        // Configuration parameters from C++ code
-        const IMAGE_ENLARGR = 15;
-        const POINTS_NUMBER = 2000;
-        const FREQUENCY = 50;
-        const DANCESIZE = 50;
-        const HEART_COLOR = "#ff69b4";
-        
+        // Configuration parameters - now variables that can be changed
+        let IMAGE_ENLARGR = 15;
+        let POINTS_NUMBER = 2000;
+        let FREQUENCY = 50;
+        let DANCESIZE = 50;
+        let HEART_COLOR = "#ff69b4";
+        let CORE_PARTICLE_SIZE = 1.5;
+        let EDGE_PARTICLE_SIZE = 1.0;
+        let CENTER_PARTICLE_SIZE = 1.2;
+        let BG_OPACITY = 0.07;
+        let BG_COLOR = "#000000";
+
         // DOM references
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
-        const particleCountElement = document.getElementById('particleCount');
+        const particleCountDisplay = document.getElementById('particleCountDisplay');
         const pauseBtn = document.getElementById('pauseBtn');
         const resetBtn = document.getElementById('resetBtn');
         const heartBtn = document.getElementById('heartBtn');
+        const panelToggle = document.getElementById('panelToggle');
+        const closePanel = document.getElementById('closePanel');
+        const configPanel = document.getElementById('configPanel');
+
+        // Animation state
+        let isPlaying = true;
+        let frame = 0;
+        let points = [];
+        let edgeDiffusionPoints = [];
+        let centerDiffusionPoints = [];
         
         // Set canvas to full window size
         function resizeCanvas() {
@@ -136,13 +400,6 @@
         
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
-        
-        // Animation state
-        let isPlaying = true;
-        let frame = 0;
-        let points = [];
-        let edgeDiffusionPoints = [];
-        let centerDiffusionPoints = [];
         
         // ==================== C++ Function Implementations ====================
         
@@ -168,7 +425,7 @@
             };
         }
         
-        // Caculate_position - same as in C++
+        // Calculate_position - same as in C++
         function calculate_position(point, ratio = 0.9) {
             const force = 1 / Math.pow(point.x * point.x + point.y * point.y, 0.6);
             const dx = point.x * force * ratio + (Math.random() * 2 - 1);
@@ -224,7 +481,7 @@
                 centerDiffusionPoints.push(p);
             }
             
-            particleCountElement.textContent = (points.length + edgeDiffusionPoints.length + centerDiffusionPoints.length).toLocaleString();
+            particleCountDisplay.textContent = (points.length + edgeDiffusionPoints.length + centerDiffusionPoints.length).toLocaleString();
         }
         
         // ==================== Animation Logic ====================
@@ -237,7 +494,7 @@
             const centerY = canvas.height / 2;
             
             // Clear the canvas
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.07)';
+            ctx.fillStyle = `rgba(${parseInt(BG_COLOR.slice(1, 3), 16)}, ${parseInt(BG_COLOR.slice(3, 5), 16)}, ${parseInt(BG_COLOR.slice(5, 7), 16)}, ${BG_OPACITY})`;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
             // Calculate current animation parameters
@@ -266,7 +523,7 @@
                 p.x += centerX;
                 p.y += centerY;
                 ctx.beginPath();
-                ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
+                ctx.arc(p.x, p.y, CORE_PARTICLE_SIZE, 0, Math.PI * 2);
                 ctx.fill();
             }
             
@@ -277,7 +534,7 @@
                 p.x += centerX;
                 p.y += centerY;
                 ctx.beginPath();
-                ctx.arc(p.x, p.y, 1, 0, Math.PI * 2);
+                ctx.arc(p.x, p.y, EDGE_PARTICLE_SIZE, 0, Math.PI * 2);
                 ctx.fill();
             }
             
@@ -288,7 +545,7 @@
                 p.x += centerX;
                 p.y += centerY;
                 ctx.beginPath();
-                ctx.arc(p.x, p.y, 1.2, 0, Math.PI * 2);
+                ctx.arc(p.x, p.y, CENTER_PARTICLE_SIZE, 0, Math.PI * 2);
                 ctx.fill();
             }
             
@@ -304,8 +561,138 @@
                 const p = heart_function(t);
                 points.push(p);
             }
-            particleCountElement.textContent = (points.length + edgeDiffusionPoints.length + centerDiffusionPoints.length).toLocaleString();
+            particleCountDisplay.textContent = (points.length + edgeDiffusionPoints.length + centerDiffusionPoints.length).toLocaleString();
         }
+        
+        // ==================== Parameter Control Functions ====================
+        
+        function updateParameters() {
+            // Update variables from UI
+            HEART_COLOR = document.getElementById('heartColor').value;
+            IMAGE_ENLARGR = parseInt(document.getElementById('heartSize').value);
+            FREQUENCY = parseInt(document.getElementById('frequency').value);
+            POINTS_NUMBER = parseInt(document.getElementById('particleCountSlider').value);
+            DANCESIZE = parseInt(document.getElementById('danceSize').value);
+            CORE_PARTICLE_SIZE = parseFloat(document.getElementById('coreSize').value);
+            EDGE_PARTICLE_SIZE = parseFloat(document.getElementById('edgeSize').value);
+            CENTER_PARTICLE_SIZE = parseFloat(document.getElementById('centerSize').value);
+            BG_OPACITY = parseFloat(document.getElementById('bgOpacity').value);
+            BG_COLOR = document.getElementById('bgColor').value;
+            
+            // Update corresponding input fields
+            document.getElementById('heartSizeInput').value = IMAGE_ENLARGR;
+            document.getElementById('frequencyInput').value = FREQUENCY;
+            document.getElementById('particleCountInput').value = POINTS_NUMBER;
+            document.getElementById('danceSizeInput').value = DANCESIZE;
+            document.getElementById('coreSizeInput').value = CORE_PARTICLE_SIZE;
+            document.getElementById('edgeSizeInput').value = EDGE_PARTICLE_SIZE;
+            document.getElementById('centerSizeInput').value = CENTER_PARTICLE_SIZE;
+            document.getElementById('bgOpacityInput').value = BG_OPACITY;
+            
+            // Update color previews
+            document.querySelectorAll('.color-preview')[0].style.backgroundColor = HEART_COLOR;
+            document.querySelectorAll('.color-preview')[1].style.backgroundColor = BG_COLOR;
+            
+            // Reinitialize particles with new parameters
+            initPoints();
+        }
+        
+        function saveCurrentPreset() {
+            const preset = {
+                HEART_COLOR,
+                IMAGE_ENLARGR,
+                FREQUENCY,
+                POINTS_NUMBER,
+                DANCESIZE,
+                CORE_PARTICLE_SIZE,
+                EDGE_PARTICLE_SIZE,
+                CENTER_PARTICLE_SIZE,
+                BG_OPACITY,
+                BG_COLOR
+            };
+            
+            localStorage.setItem('heartAnimationPreset', JSON.stringify(preset));
+            alert('Settings saved!');
+        }
+        
+        function loadPreset() {
+            const savedPreset = localStorage.getItem('heartAnimationPreset');
+            if (savedPreset) {
+                const preset = JSON.parse(savedPreset);
+                
+                // Update variables
+                HEART_COLOR = preset.HEART_COLOR;
+                IMAGE_ENLARGR = preset.IMAGE_ENLARGR;
+                FREQUENCY = preset.FREQUENCY;
+                POINTS_NUMBER = preset.POINTS_NUMBER;
+                DANCESIZE = preset.DANCESIZE;
+                CORE_PARTICLE_SIZE = preset.CORE_PARTICLE_SIZE;
+                EDGE_PARTICLE_SIZE = preset.EDGE_PARTICLE_SIZE;
+                CENTER_PARTICLE_SIZE = preset.CENTER_PARTICLE_SIZE;
+                BG_OPACITY = preset.BG_OPACITY;
+                BG_COLOR = preset.BG_COLOR;
+                
+                // Update UI
+                document.getElementById('heartColor').value = HEART_COLOR;
+                document.getElementById('heartSize').value = IMAGE_ENLARGR;
+                document.getElementById('frequency').value = FREQUENCY;
+                document.getElementById('particleCountSlider').value = POINTS_NUMBER;
+                document.getElementById('danceSize').value = DANCESIZE;
+                document.getElementById('coreSize').value = CORE_PARTICLE_SIZE;
+                document.getElementById('edgeSize').value = EDGE_PARTICLE_SIZE;
+                document.getElementById('centerSize').value = CENTER_PARTICLE_SIZE;
+                document.getElementById('bgOpacity').value = BG_OPACITY;
+                document.getElementById('bgColor').value = BG_COLOR;
+                
+                // Update previews and inputs
+                updateParameters();
+            }
+        }
+        
+        // ==================== UI Setup ====================
+        
+        // Setup event listeners for parameter controls
+        const paramControls = [
+            'heartColor', 'heartSize', 'frequency', 'particleCountSlider', 
+            'danceSize', 'coreSize', 'edgeSize', 'centerSize', 'bgOpacity', 'bgColor'
+        ];
+        
+        paramControls.forEach(id => {
+            document.getElementById(id).addEventListener('input', updateParameters);
+        });
+        
+        // Setup linked inputs
+        const linkedInputs = [
+            { slider: 'heartSize', input: 'heartSizeInput' },
+            { slider: 'frequency', input: 'frequencyInput' },
+            { slider: 'particleCountSlider', input: 'particleCountInput' },
+            { slider: 'danceSize', input: 'danceSizeInput' },
+            { slider: 'coreSize', input: 'coreSizeInput' },
+            { slider: 'edgeSize', input: 'edgeSizeInput' },
+            { slider: 'centerSize', input: 'centerSizeInput' },
+            { slider: 'bgOpacity', input: 'bgOpacityInput' }
+        ];
+        
+        linkedInputs.forEach(pair => {
+            document.getElementById(pair.slider).addEventListener('input', function() {
+                document.getElementById(pair.input).value = this.value;
+                updateParameters();
+            });
+            
+            document.getElementById(pair.input).addEventListener('input', function() {
+                document.getElementById(pair.slider).value = this.value;
+                updateParameters();
+            });
+        });
+        
+        // Panel toggle
+        panelToggle.addEventListener('click', () => {
+            configPanel.classList.toggle('visible');
+        });
+        
+        closePanel.addEventListener('click', () => {
+            configPanel.classList.remove('visible');
+        });
         
         // Button event handlers
         pauseBtn.addEventListener('click', () => {
@@ -321,9 +708,18 @@
         
         heartBtn.addEventListener('click', createHeartExplosion);
         
+        // Save preset button
+        document.getElementById('savePreset').addEventListener('click', saveCurrentPreset);
+        
         // ==================== Initialize and Start Animation ====================
         
+        // Try to load saved preset
+        loadPreset();
+        
+        // Initialize particles
         initPoints();
+        
+        // Start animation
         animate();
     </script>
 </body>
