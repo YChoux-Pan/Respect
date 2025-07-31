@@ -380,23 +380,23 @@
             </div>
             <div class="param-row">
                 <span class="param-label">核心粒子大小</span>
-                <input type="range" min="0.5" max="3" step="0.1" value="1.3" class="param-slider" id="coreSize">
-                <input type="number" min="0.5" max="3" step="0.1" value="1.3" class="param-input" id="coreSizeInput">
+                <input type="range" min="0.1" max="1.2" step="0.1" value="1.3" class="param-slider" id="coreSize">
+                <input type="number" min="0.1" max="1.2" step="0.1" value="1.3" class="param-input" id="coreSizeInput">
             </div>
             <div class="param-row">
                 <span class="param-label">边缘粒子大小</span>
-                <input type="range" min="0.5" max="3" step="0.1" value="0.9" class="param-slider" id="edgeSize">
-                <input type="number" min="0.5" max="3" step="0.1" value="0.9" class="param-input" id="edgeSizeInput">
+                <input type="range" min="0.1" max="1.2" step="0.1" value="0.9" class="param-slider" id="edgeSize">
+                <input type="number" min="0.1" max="1.2" step="0.1" value="0.9" class="param-input" id="edgeSizeInput">
             </div>
             <div class="param-row">
                 <span class="param-label">中心粒子大小</span>
-                <input type="range" min="0.5" max="3" step="0.1" value="1.0" class="param-slider" id="centerSize">
-                <input type="number" min="0.5" max="3" step="0.1" value="1.0" class="param-input" id="centerSizeInput">
+                <input type="range" min="0.1" max="1.2" step="0.1" value="1.0" class="param-slider" id="centerSize">
+                <input type="number" min="0.1" max="1.2" step="0.1" value="1.0" class="param-input" id="centerSizeInput">
             </div>
             <div class="param-row">
                 <span class="param-label">光晕粒子大小</span>
-                <input type="range" min="0.5" max="5" step="0.1" value="1.0" class="param-slider" id="haloSize">
-                <input type="number" min="0.5" max="5" step="0.1" value="1.0" class="param-input" id="haloSizeInput">
+                <input type="range" min="0.1" max="1.2" step="0.1" value="1.0" class="param-slider" id="haloSize">
+                <input type="number" min="0.1" max="1.2" step="0.1" value="1.0" class="param-input" id="haloSizeInput">
             </div>
         </div>
         
@@ -423,22 +423,22 @@
 
     <script>
         // 配置参数 - 现在是可以更改的变量
-        let IMAGE_ENLARGR = 12; // 中等大小适合手机
-        let POINTS_NUMBER = 1500; // 减少粒子数量提高手机性能
-        let FREQUENCY = 45; // 中等心跳频率
-        let DANCESIZE = 50;
-        let HEART_COLOR = "#ff69b4"; // 粉红色爱心
-        let CORE_PARTICLE_SIZE = 1.3;
-        let EDGE_PARTICLE_SIZE = 0.9;
-        let CENTER_PARTICLE_SIZE = 1.0;
-        let BG_OPACITY = 0.06;
-        let BG_COLOR = "#000000";
+        let IMAGE_ENLARGR = 10;         // 爱心大小的缩放比例（中等大小适合手机）
+        let POINTS_NUMBER = 1400;       // 减少粒子数量提高手机性能
+        let FREQUENCY = 70;             // 心跳频率（值越大心跳越慢）
+        let DANCESIZE = 50;             //粒子运动幅度系数（值越大粒子摆动范围越大）
+        let HEART_COLOR = "#ff69b4";    // 粉红色爱心
+        let CORE_PARTICLE_SIZE = 0.5;   // 核心爱心粒子半径
+        let EDGE_PARTICLE_SIZE = 0.7;   // 边缘扩散粒子半径
+        let CENTER_PARTICLE_SIZE = 0.6; // 中心扩散粒子半径
+        let BG_OPACITY = 0.06;          // 背景透明度（值越大背景越不透明）
+        let BG_COLOR = "#000000";       // 背景颜色（纯黑色）
 
         // 新增配置变量
-        let HALO_COLOR = "#ffffff";
-        let EDGE_COLOR = "#ffffff";
-        let CENTER_COLOR = "#ffffff";
-        let HALO_SIZE = 1.0;
+        let HALO_COLOR = "#ffffff";     // 光晕粒子颜色（白色）
+        let EDGE_COLOR = "#ffffff";     // 边缘粒子颜色（白色）
+        let CENTER_COLOR = "#ffffff";   // 中心粒子颜色（白色）
+        let HALO_SIZE = 0.5;            // 光晕粒子半径
 
         // DOM引用
         const canvas = document.getElementById('canvas');
