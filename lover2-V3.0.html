@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>爱心粒子动画 - 多设备适配版</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Particle Animation</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            touch-action: manipulation;
         }
         
         body {
@@ -19,7 +18,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         canvas {
@@ -38,12 +37,10 @@
             z-index: 10;
             pointer-events: none;
             text-shadow: 0 0 10px rgba(255, 105, 180, 0.7);
-            max-width: 90vw;
-            padding: 0 20px;
         }
         
         h1 {
-            font-size: clamp(1.8rem, 5vw, 3rem);
+            font-size: clamp(2rem, 5vw, 3rem);
             margin-bottom: 1rem;
             font-weight: 400;
             animation: pulse 2s ease-in-out infinite alternate;
@@ -56,46 +53,40 @@
         
         .info {
             position: absolute;
-            bottom: 15px;
-            right: 15px;
+            bottom: 20px;
+            right: 20px;
             color: #fff;
-            font-size: clamp(0.7rem, 3vw, 1rem);
+            font-size: 14px;
             z-index: 20;
             background: rgba(0, 0, 0, 0.5);
-            padding: 6px 10px;
+            padding: 8px 12px;
             border-radius: 10px;
             pointer-events: none;
-            backdrop-filter: blur(2px);
         }
         
         .controls {
             position: absolute;
-            bottom: 15px;
-            left: 15px;
+            bottom: 20px;
+            left: 20px;
             z-index: 20;
             background: rgba(0, 0, 0, 0.5);
             padding: 10px;
             border-radius: 10px;
             color: white;
             display: flex;
-            gap: 8px;
+            gap: 10px;
             flex-wrap: wrap;
-            backdrop-filter: blur(2px);
-            max-width: calc(100% - 30px);
         }
         
         .control-btn {
             background: rgba(255, 105, 180, 0.3);
             border: none;
             color: white;
-            padding: 6px 12px;
+            padding: 5px 10px;
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: clamp(0.8rem, 3.5vw, 1rem);
-            flex: 1;
-            min-width: 100px;
-            white-space: nowrap;
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
         }
         
         .control-btn:hover {
@@ -104,15 +95,15 @@
         
         .config-panel {
             position: absolute;
-            top: 15px;
-            right: 15px;
+            top: 20px;
+            right: 20px;
             z-index: 30;
             background: rgba(0, 0, 0, 0.7);
             padding: 15px;
             border-radius: 10px;
             color: white;
-            width: min(90vw, 400px);
-            max-height: 80vh;
+            width: 300px;
+            max-height: 90vh;
             overflow-y: auto;
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255, 105, 180, 0.3);
@@ -126,20 +117,20 @@
         
         .panel-toggle {
             position: absolute;
-            top: 15px;
-            right: 15px;
+            top: 20px;
+            right: 20px;
             z-index: 25;
             background: rgba(0, 0, 0, 0.7);
             color: white;
             border: none;
             border-radius: 50%;
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             transition: all 0.3s ease;
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255, 105, 180, 0.3);
@@ -158,10 +149,6 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
         
-        .config-header h2 {
-            font-size: 1.3rem;
-        }
-        
         .config-group {
             margin-bottom: 15px;
         }
@@ -178,13 +165,11 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 12px;
-            gap: 10px;
-            flex-wrap: wrap;
         }
         
         .param-label {
             font-size: 0.9rem;
-            flex: 1 0 120px;
+            flex: 1;
         }
         
         .param-input {
@@ -192,20 +177,18 @@
             border: 1px solid rgba(255, 105, 180, 0.3);
             border-radius: 4px;
             color: white;
-            padding: 6px 8px;
+            padding: 5px 8px;
             width: 100px;
             text-align: center;
-            font-size: 0.9rem;
         }
         
         .param-slider {
-            flex: 1 0 130px;
-            max-width: 150px;
+            width: 120px;
         }
         
         .color-preview {
-            width: 36px;
-            height: 36px;
+            width: 30px;
+            height: 30px;
             border-radius: 4px;
             border: 1px solid rgba(255, 255, 255, 0.3);
             background-color: currentColor;
@@ -216,112 +199,70 @@
             background: rgba(255, 105, 180, 0.3);
             border: none;
             color: white;
-            padding: 10px;
+            padding: 8px 15px;
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 1rem;
+            font-size: 0.9rem;
             width: 100%;
             margin-top: 10px;
-            font-weight: 500;
         }
         
         .save-preset:hover {
             background: rgba(255, 105, 180, 0.6);
         }
         
-        .device-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .device-option {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 105, 180, 0.3);
-            border-radius: 5px;
-            padding: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .device-option:hover {
-            background: rgba(255, 105, 180, 0.2);
-        }
-        
-        .device-option.active {
-            background: rgba(255, 105, 180, 0.4);
-            border-color: #ff69b4;
-        }
-        
-        .device-name {
-            font-size: 0.85rem;
-            margin-bottom: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .device-res {
-            font-size: 0.75rem;
-            opacity: 0.8;
-        }
-        
         @media (max-width: 768px) {
+            .config-panel {
+                width: calc(100% - 40px);
+                max-height: 70vh;
+                top: 10px;
+                right: 10px;
+            }
+            
             .controls {
                 left: 10px;
                 bottom: 10px;
                 padding: 8px;
-                gap: 6px;
+            }
+            
+            .info {
+                bottom: 10px;
+                right: 10px;
+                font-size: 12px;
+            }
+            
+            .text-overlay {
+                padding: 0 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .controls {
+                gap: 5px;
+            }
+            
+            .control-btn {
+                padding: 4px 8px;
             }
             
             .config-panel {
                 padding: 12px;
-                top: 10px;
-                right: 10px;
             }
             
             .param-row {
                 flex-direction: column;
                 align-items: flex-start;
-                margin-bottom: 15px;
             }
             
-            .param-slider, .param-input {
+            .param-slider {
                 width: 100%;
-                max-width: none;
+                margin-top: 5px;
             }
             
-            .device-options {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .control-btn {
-                min-width: 80px;
-                padding: 5px 8px;
-                font-size: 0.85rem;
-            }
-            
-            .panel-toggle {
-                width: 40px;
-                height: 40px;
-                font-size: 1.1rem;
-            }
-            
-            .config-header h2 {
-                font-size: 1.1rem;
-            }
-            
-            .param-label {
-                font-size: 0.85rem;
-            }
-            
-            .device-name {
-                font-size: 0.8rem;
+            .param-input {
+                width: 100%;
+                margin-top: 5px;
             }
         }
         
@@ -333,130 +274,95 @@
 </head>
 <body>
     <div class="text-overlay">
-        <h1>爱心粒子动画</h1>
-        <div class="subtitle">自适应多设备展示</div>
+        <h1>Heart Particle Animation</h1>
+        <div class="subtitle">Based on C++ math functions</div>
     </div>
     
     <button class="panel-toggle" id="panelToggle">⚙️</button>
     
     <div class="controls">
-        <button id="pauseBtn" class="control-btn">暂停</button>
-        <button id="resetBtn" class="control-btn">重置粒子</button>
-        <button id="heartBtn" class="control-btn">爱心爆炸</button>
+        <button id="pauseBtn" class="control-btn">Pause</button>
+        <button id="resetBtn" class="control-btn">Reset Particles</button>
+        <button id="heartBtn" class="control-btn">Explode Heart</button>
     </div>
     
     <div class="config-panel" id="configPanel">
         <div class="config-header">
-            <h2>动画参数配置</h2>
+            <h2>Animation Parameters</h2>
             <button class="panel-toggle" id="closePanel">✕</button>
         </div>
         
         <div class="config-group">
-            <h3>设备预设</h3>
+            <h3>Heart Settings</h3>
             <div class="param-row">
-                <span class="param-label">屏幕适配预设</span>
-                <select id="devicePreset" class="param-input">
-                    <option value="default">默认配置</option>
-                    <option value="mobileSmall">小型手机</option>
-                    <option value="mobileMedium">中型手机</option>
-                    <option value="mobileLarge">大型手机</option>
-                    <option value="tablet">平板设备</option>
-                    <option value="desktop">桌面设备</option>
-                    <option value="custom">自定义</option>
-                </select>
-            </div>
-            
-            <div class="device-options" id="deviceOptions">
-                <div class="device-option" data-preset="mobileSmall">
-                    <div class="device-name">小米15</div>
-                    <div class="device-res">1080×2400</div>
-                </div>
-                <div class="device-option" data-preset="mobileMedium">
-                    <div class="device-name">iPhone 15</div>
-                    <div class="device-res">1179×2556</div>
-                </div>
-                <div class="device-option" data-preset="tablet">
-                    <div class="device-name">iPad Pro</div>
-                    <div class="device-res">1366×1024</div>
-                </div>
-                <div class="device-option" data-preset="custom">
-                    <div class="device-name">自定义参数</div>
-                    <div class="device-res">用户设定</div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="config-group">
-            <h3>爱心参数</h3>
-            <div class="param-row">
-                <span class="param-label">爱心颜色</span>
+                <span class="param-label">Heart Color</span>
                 <input type="color" id="heartColor" class="param-input" value="#ff69b4">
                 <div class="color-preview" style="background-color: #ff69b4;"></div>
             </div>
             <div class="param-row">
-                <span class="param-label">爱心大小</span>
+                <span class="param-label">Heart Size</span>
                 <input type="range" min="5" max="30" value="15" class="param-slider" id="heartSize">
                 <input type="number" min="5" max="30" value="15" class="param-input" id="heartSizeInput">
             </div>
             <div class="param-row">
-                <span class="param-label">跳动频率</span>
+                <span class="param-label">Frequency</span>
                 <input type="range" min="10" max="100" value="50" class="param-slider" id="frequency">
                 <input type="number" min="10" max="100" value="50" class="param-input" id="frequencyInput">
             </div>
         </div>
         
         <div class="config-group">
-            <h3>粒子参数</h3>
+            <h3>Particle Settings</h3>
             <div class="param-row">
-                <span class="param-label">粒子数量</span>
+                <span class="param-label">Particle Count</span>
                 <input type="range" min="500" max="10000" value="2000" step="500" class="param-slider" id="particleCountSlider">
                 <input type="number" min="500" max="10000" value="2000" class="param-input" id="particleCountInput">
             </div>
             <div class="param-row">
-                <span class="param-label">浮动幅度</span>
+                <span class="param-label">Dance Size</span>
                 <input type="range" min="10" max="100" value="50" class="param-slider" id="danceSize">
                 <input type="number" min="10" max="100" value="50" class="param-input" id="danceSizeInput">
             </div>
             <div class="param-row">
-                <span class="param-label">核心粒子</span>
+                <span class="param-label">Core Particle Size</span>
                 <input type="range" min="0.5" max="3" step="0.1" value="1.5" class="param-slider" id="coreSize">
                 <input type="number" min="0.5" max="3" step="0.1" value="1.5" class="param-input" id="coreSizeInput">
             </div>
             <div class="param-row">
-                <span class="param-label">边缘粒子</span>
+                <span class="param-label">Edge Particle Size</span>
                 <input type="range" min="0.5" max="3" step="0.1" value="1" class="param-slider" id="edgeSize">
                 <input type="number" min="0.5" max="3" step="0.1" value="1" class="param-input" id="edgeSizeInput">
             </div>
             <div class="param-row">
-                <span class="param-label">中心粒子</span>
+                <span class="param-label">Center Particle Size</span>
                 <input type="range" min="0.5" max="3" step="0.1" value="1.2" class="param-slider" id="centerSize">
                 <input type="number" min="0.5" max="3" step="0.1" value="1.2" class="param-input" id="centerSizeInput">
             </div>
         </div>
         
         <div class="config-group">
-            <h3>背景设置</h3>
+            <h3>Background</h3>
             <div class="param-row">
-                <span class="param-label">背景颜色</span>
+                <span class="param-label">Background Color</span>
                 <input type="color" id="bgColor" class="param-input" value="#000000">
                 <div class="color-preview" style="background-color: #000000;"></div>
             </div>
             <div class="param-row">
-                <span class="param-label">透明度</span>
+                <span class="param-label">Background Opacity</span>
                 <input type="range" min="0.01" max="0.2" step="0.01" value="0.07" class="param-slider" id="bgOpacity">
                 <input type="number" min="0.01" max="0.2" step="0.01" value="0.07" class="param-input" id="bgOpacityInput">
             </div>
         </div>
         
-        <button class="save-preset" id="savePreset">保存当前配置</button>
+        <button class="save-preset" id="savePreset">Save Current Settings</button>
     </div>
     
-    <div class="info">粒子数量: <span id="particleCountDisplay">0</span></div>
+    <div class="info">Particles: <span id="particleCountDisplay">0</span></div>
     
     <canvas id="canvas"></canvas>
 
     <script>
-        // 全局参数（所有设备共用）
+        // Configuration parameters - now variables that can be changed
         let IMAGE_ENLARGR = 15;
         let POINTS_NUMBER = 2000;
         let FREQUENCY = 50;
@@ -467,53 +373,8 @@
         let CENTER_PARTICLE_SIZE = 1.2;
         let BG_OPACITY = 0.07;
         let BG_COLOR = "#000000";
-        
-        // 设备专用参数
-        const devicePresets = {
-            default: {},
-            mobileSmall: {
-                POINTS_NUMBER: 1800,
-                IMAGE_ENLARGR: 10,
-                CORE_PARTICLE_SIZE: 1.2,
-                EDGE_PARTICLE_SIZE: 0.9,
-                CENTER_PARTICLE_SIZE: 1.0,
-                DANCESIZE: 45,
-                HEART_COLOR: "#ff69b4"
-            },
-            mobileMedium: {
-                POINTS_NUMBER: 2200,
-                IMAGE_ENLARGR: 12,
-                CORE_PARTICLE_SIZE: 1.4,
-                EDGE_PARTICLE_SIZE: 1.0,
-                CENTER_PARTICLE_SIZE: 1.1
-            },
-            mobileLarge: {
-                POINTS_NUMBER: 2500,
-                IMAGE_ENLARGR: 14,
-                CORE_PARTICLE_SIZE: 1.6,
-                EDGE_PARTICLE_SIZE: 1.1,
-                CENTER_PARTICLE_SIZE: 1.3,
-                HEART_COLOR: "#ff4081"
-            },
-            tablet: {
-                POINTS_NUMBER: 3500,
-                IMAGE_ENLARGR: 17,
-                CORE_PARTICLE_SIZE: 1.8,
-                EDGE_PARTICLE_SIZE: 1.2,
-                CENTER_PARTICLE_SIZE: 1.5
-            },
-            desktop: {
-                POINTS_NUMBER: 5000,
-                IMAGE_ENLARGR: 20,
-                CORE_PARTICLE_SIZE: 2.0,
-                EDGE_PARTICLE_SIZE: 1.4,
-                CENTER_PARTICLE_SIZE: 1.8,
-                BG_OPACITY: 0.05,
-                HEART_COLOR: "#ff1493"
-            }
-        };
 
-        // DOM元素
+        // DOM references
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const particleCountDisplay = document.getElementById('particleCountDisplay');
@@ -523,17 +384,15 @@
         const panelToggle = document.getElementById('panelToggle');
         const closePanel = document.getElementById('closePanel');
         const configPanel = document.getElementById('configPanel');
-        const devicePresetSelect = document.getElementById('devicePreset');
-        const deviceOptions = document.querySelectorAll('.device-option');
 
-        // 动画状态
+        // Animation state
         let isPlaying = true;
         let frame = 0;
         let points = [];
         let edgeDiffusionPoints = [];
         let centerDiffusionPoints = [];
         
-        // 设置画布大小为整个窗口
+        // Set canvas to full window size
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -542,9 +401,9 @@
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
         
-        // ==================== 数学函数实现 ====================
+        // ==================== C++ Function Implementations ====================
         
-        // 爱心函数
+        // Heart function - same as heart_function in C++
         function heart_function(t, shrink_ratio = IMAGE_ENLARGR) {
             const x = 16 * (Math.sin(t) * Math.sin(t) * Math.sin(t));
             const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
@@ -554,7 +413,7 @@
             };
         }
         
-        // 粒子扩散函数
+        // Scatter_inside - same as in C++
         function scatter_inside(point, beta = 0.05) {
             const ratiox = -Math.log(Math.random()) * beta;
             const ratioy = -Math.log(Math.random()) * beta;
@@ -566,7 +425,7 @@
             };
         }
         
-        // 位置计算函数
+        // Calculate_position - same as in C++
         function calculate_position(point, ratio = 0.9) {
             const force = 1 / Math.pow(point.x * point.x + point.y * point.y, 0.6);
             const dx = point.x * force * ratio + (Math.random() * 2 - 1);
@@ -577,7 +436,7 @@
             };
         }
         
-        // 缩放比例函数
+        // Shrink_ratio - same as in C++
         function shrink_ratio(point, ratio = 0.9) {
             const force = 1 / Math.pow(point.x * point.x + point.y * point.y, 1);
             const dx = point.x * force * ratio;
@@ -588,26 +447,26 @@
             };
         }
         
-        // 曲线函数
+        // Curve function - same as curve in C++
         function curve(p) {
             return 2 * (2 * Math.sin(4 * p)) / (2 * Math.PI);
         }
         
-        // ==================== 粒子初始化 ====================
+        // ==================== Particle Initialization ====================
         
         function initPoints() {
             points = [];
             edgeDiffusionPoints = [];
             centerDiffusionPoints = [];
             
-            // 初始化爱心粒子
+            // Initialize heart points
             for (let i = 0; i < POINTS_NUMBER; i++) {
                 const t = Math.random() * 2 * Math.PI;
                 const p = heart_function(t);
                 points.push(p);
             }
             
-            // 初始化边缘扩散粒子
+            // Initialize edge diffusion points
             for (let i = 0; i < POINTS_NUMBER; i++) {
                 const point = points[i];
                 for (let j = 0; j < 3; j++) {
@@ -615,7 +474,7 @@
                 }
             }
             
-            // 初始化中心扩散粒子
+            // Initialize center diffusion points
             for (let i = 0; i < POINTS_NUMBER * 2; i++) {
                 const index = Math.floor(Math.random() * POINTS_NUMBER);
                 const p = scatter_inside(points[index], 0.17);
@@ -625,27 +484,26 @@
             particleCountDisplay.textContent = (points.length + edgeDiffusionPoints.length + centerDiffusionPoints.length).toLocaleString();
         }
         
-        // ==================== 动画逻辑 ====================
+        // ==================== Animation Logic ====================
         
         function animate() {
             if (!isPlaying) return;
             
-            // 中心坐标
+            // Center coordinates (origin for our particles)
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
             
-            // 清空画布
-            const bgRGB = hexToRgb(BG_COLOR);
-            ctx.fillStyle = `rgba(${bgRGB.r}, ${bgRGB.g}, ${bgRGB.b}, ${BG_OPACITY})`;
+            // Clear the canvas
+            ctx.fillStyle = `rgba(${parseInt(BG_COLOR.slice(1, 3), 16)}, ${parseInt(BG_COLOR.slice(3, 5), 16)}, ${parseInt(BG_COLOR.slice(5, 7), 16)}, ${BG_OPACITY})`;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            // 计算当前动画参数
+            // Calculate current animation parameters
             const animationRatio = frame / FREQUENCY * Math.PI;
             const ratio = DANCESIZE * curve(animationRatio);
             const haloRadius = 4 + 6 * (1 + curve(animationRatio));
             const haloNumber = 3000 + 4000 * Math.abs(curve(animationRatio) * curve(animationRatio));
             
-            // 绘制光晕粒子
+            // Draw halo particles
             ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
             for (let i = 0; i < haloNumber; i++) {
                 const t = Math.random() * 2 * Math.PI;
@@ -658,7 +516,7 @@
                 ctx.fill();
             }
             
-            // 绘制爱心粒子
+            // Draw particles
             ctx.fillStyle = HEART_COLOR;
             for (let point of points) {
                 let p = calculate_position(point, ratio);
@@ -669,7 +527,7 @@
                 ctx.fill();
             }
             
-            // 绘制边缘粒子
+            // Draw edge diffusion particles
             ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
             for (let point of edgeDiffusionPoints) {
                 let p = calculate_position(point, ratio);
@@ -680,7 +538,7 @@
                 ctx.fill();
             }
             
-            // 绘制中心粒子
+            // Draw center diffusion particles
             ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
             for (let point of centerDiffusionPoints) {
                 let p = calculate_position(point, ratio);
@@ -695,31 +553,7 @@
             requestAnimationFrame(animate);
         }
         
-        // ==================== 辅助函数 ====================
-        
-        function hexToRgb(hex) {
-            // 移除#符号
-            hex = hex.replace(/^#/, '');
-            
-            // 解析RGB值
-            let r, g, b;
-            
-            if (hex.length === 3) {
-                r = parseInt(hex.charAt(0) + hex.charAt(0), 16);
-                g = parseInt(hex.charAt(1) + hex.charAt(1), 16);
-                b = parseInt(hex.charAt(2) + hex.charAt(2), 16);
-            } else if (hex.length === 6) {
-                r = parseInt(hex.substring(0, 2), 16);
-                g = parseInt(hex.substring(2, 4), 16);
-                b = parseInt(hex.substring(4, 6), 16);
-            } else {
-                return {r: 0, g: 0, b: 0};
-            }
-            
-            return {r, g, b};
-        }
-        
-        // ==================== 事件处理器 ====================
+        // ==================== Event Handlers ====================
         
         function createHeartExplosion() {
             for (let i = 0; i < 50; i++) {
@@ -730,10 +564,10 @@
             particleCountDisplay.textContent = (points.length + edgeDiffusionPoints.length + centerDiffusionPoints.length).toLocaleString();
         }
         
-        // ==================== 参数控制函数 ====================
+        // ==================== Parameter Control Functions ====================
         
         function updateParameters() {
-            // 从UI更新变量
+            // Update variables from UI
             HEART_COLOR = document.getElementById('heartColor').value;
             IMAGE_ENLARGR = parseInt(document.getElementById('heartSize').value);
             FREQUENCY = parseInt(document.getElementById('frequency').value);
@@ -745,7 +579,7 @@
             BG_OPACITY = parseFloat(document.getElementById('bgOpacity').value);
             BG_COLOR = document.getElementById('bgColor').value;
             
-            // 更新对应输入字段
+            // Update corresponding input fields
             document.getElementById('heartSizeInput').value = IMAGE_ENLARGR;
             document.getElementById('frequencyInput').value = FREQUENCY;
             document.getElementById('particleCountInput').value = POINTS_NUMBER;
@@ -755,54 +589,12 @@
             document.getElementById('centerSizeInput').value = CENTER_PARTICLE_SIZE;
             document.getElementById('bgOpacityInput').value = BG_OPACITY;
             
-            // 更新颜色预览
+            // Update color previews
             document.querySelectorAll('.color-preview')[0].style.backgroundColor = HEART_COLOR;
             document.querySelectorAll('.color-preview')[1].style.backgroundColor = BG_COLOR;
             
-            // 用新参数重新初始化粒子
+            // Reinitialize particles with new parameters
             initPoints();
-        }
-        
-        function applyDevicePreset(presetName) {
-            const preset = devicePresets[presetName];
-            if (!preset) return;
-            
-            // 应用预设值到UI控件
-            if (preset.POINTS_NUMBER !== undefined) {
-                document.getElementById('particleCountSlider').value = preset.POINTS_NUMBER;
-                document.getElementById('particleCountInput').value = preset.POINTS_NUMBER;
-            }
-            if (preset.IMAGE_ENLARGR !== undefined) {
-                document.getElementById('heartSize').value = preset.IMAGE_ENLARGR;
-                document.getElementById('heartSizeInput').value = preset.IMAGE_ENLARGR;
-            }
-            if (preset.CORE_PARTICLE_SIZE !== undefined) {
-                document.getElementById('coreSize').value = preset.CORE_PARTICLE_SIZE;
-                document.getElementById('coreSizeInput').value = preset.CORE_PARTICLE_SIZE;
-            }
-            if (preset.EDGE_PARTICLE_SIZE !== undefined) {
-                document.getElementById('edgeSize').value = preset.EDGE_PARTICLE_SIZE;
-                document.getElementById('edgeSizeInput').value = preset.EDGE_PARTICLE_SIZE;
-            }
-            if (preset.CENTER_PARTICLE_SIZE !== undefined) {
-                document.getElementById('centerSize').value = preset.CENTER_PARTICLE_SIZE;
-                document.getElementById('centerSizeInput').value = preset.CENTER_PARTICLE_SIZE;
-            }
-            if (preset.DANCESIZE !== undefined) {
-                document.getElementById('danceSize').value = preset.DANCESIZE;
-                document.getElementById('danceSizeInput').value = preset.DANCESIZE;
-            }
-            if (preset.HEART_COLOR !== undefined) {
-                document.getElementById('heartColor').value = preset.HEART_COLOR;
-                document.querySelectorAll('.color-preview')[0].style.backgroundColor = preset.HEART_COLOR;
-            }
-            if (preset.BG_OPACITY !== undefined) {
-                document.getElementById('bgOpacity').value = preset.BG_OPACITY;
-                document.getElementById('bgOpacityInput').value = preset.BG_OPACITY;
-            }
-            
-            // 更新变量并刷新粒子
-            updateParameters();
         }
         
         function saveCurrentPreset() {
@@ -820,7 +612,7 @@
             };
             
             localStorage.setItem('heartAnimationPreset', JSON.stringify(preset));
-            alert('配置已保存！');
+            alert('Settings saved!');
         }
         
         function loadPreset() {
@@ -828,7 +620,7 @@
             if (savedPreset) {
                 const preset = JSON.parse(savedPreset);
                 
-                // 更新变量
+                // Update variables
                 HEART_COLOR = preset.HEART_COLOR;
                 IMAGE_ENLARGR = preset.IMAGE_ENLARGR;
                 FREQUENCY = preset.FREQUENCY;
@@ -840,7 +632,7 @@
                 BG_OPACITY = preset.BG_OPACITY;
                 BG_COLOR = preset.BG_COLOR;
                 
-                // 更新UI
+                // Update UI
                 document.getElementById('heartColor').value = HEART_COLOR;
                 document.getElementById('heartSize').value = IMAGE_ENLARGR;
                 document.getElementById('frequency').value = FREQUENCY;
@@ -852,25 +644,14 @@
                 document.getElementById('bgOpacity').value = BG_OPACITY;
                 document.getElementById('bgColor').value = BG_COLOR;
                 
-                // 更新预览
-                document.querySelectorAll('.color-preview')[0].style.backgroundColor = HEART_COLOR;
-                document.querySelectorAll('.color-preview')[1].style.backgroundColor = BG_COLOR;
-                
-                // 更新输入字段
-                document.getElementById('heartSizeInput').value = IMAGE_ENLARGR;
-                document.getElementById('frequencyInput').value = FREQUENCY;
-                document.getElementById('particleCountInput').value = POINTS_NUMBER;
-                document.getElementById('danceSizeInput').value = DANCESIZE;
-                document.getElementById('coreSizeInput').value = CORE_PARTICLE_SIZE;
-                document.getElementById('edgeSizeInput').value = EDGE_PARTICLE_SIZE;
-                document.getElementById('centerSizeInput').value = CENTER_PARTICLE_SIZE;
-                document.getElementById('bgOpacityInput').value = BG_OPACITY;
+                // Update previews and inputs
+                updateParameters();
             }
         }
         
-        // ==================== UI设置 ====================
+        // ==================== UI Setup ====================
         
-        // 设置参数控件的监听器
+        // Setup event listeners for parameter controls
         const paramControls = [
             'heartColor', 'heartSize', 'frequency', 'particleCountSlider', 
             'danceSize', 'coreSize', 'edgeSize', 'centerSize', 'bgOpacity', 'bgColor'
@@ -880,7 +661,7 @@
             document.getElementById(id).addEventListener('input', updateParameters);
         });
         
-        // 设置联动输入
+        // Setup linked inputs
         const linkedInputs = [
             { slider: 'heartSize', input: 'heartSizeInput' },
             { slider: 'frequency', input: 'frequencyInput' },
@@ -904,7 +685,7 @@
             });
         });
         
-        // 面板切换
+        // Panel toggle
         panelToggle.addEventListener('click', () => {
             configPanel.classList.toggle('visible');
         });
@@ -913,10 +694,10 @@
             configPanel.classList.remove('visible');
         });
         
-        // 按钮事件处理
+        // Button event handlers
         pauseBtn.addEventListener('click', () => {
             isPlaying = !isPlaying;
-            pauseBtn.textContent = isPlaying ? '暂停' : '播放';
+            pauseBtn.textContent = isPlaying ? 'Pause' : 'Play';
             if (isPlaying) animate();
         });
         
@@ -927,39 +708,18 @@
         
         heartBtn.addEventListener('click', createHeartExplosion);
         
-        // 保存配置按钮
+        // Save preset button
         document.getElementById('savePreset').addEventListener('click', saveCurrentPreset);
         
-        // 设备预设选择
-        devicePresetSelect.addEventListener('change', function() {
-            applyDevicePreset(this.value);
-        });
+        // ==================== Initialize and Start Animation ====================
         
-        // 设备选项点击
-        deviceOptions.forEach(option => {
-            option.addEventListener('click', function() {
-                const preset = this.dataset.preset;
-                devicePresetSelect.value = preset;
-                document.querySelectorAll('.device-option').forEach(el => {
-                    el.classList.remove('active');
-                });
-                this.classList.add('active');
-                applyDevicePreset(preset);
-            });
-        });
-        
-        // ==================== 初始化和开始动画 ====================
-        
-        // 尝试加载保存的配置
+        // Try to load saved preset
         loadPreset();
         
-        // 初始化小米15手机的预设
-        applyDevicePreset('mobileSmall');
-        
-        // 初始化粒子
+        // Initialize particles
         initPoints();
         
-        // 开始动画
+        // Start animation
         animate();
     </script>
 </body>
