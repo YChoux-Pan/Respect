@@ -425,19 +425,18 @@
         // 配置参数 - 现在是可以更改的变量
         let IMAGE_ENLARGR = 10;         // 爱心大小的缩放比例（中等大小适合手机）
         let POINTS_NUMBER = 1800;       // 减少粒子数量提高手机性能
-        let FREQUENCY = 75;             // 心跳频率（值越大心跳越慢）
-        let DANCESIZE = 40;             //粒子运动幅度系数（值越大粒子摆动范围越大）
+        let FREQUENCY = 80;             // 心跳频率（值越大心跳越慢）
+        let DANCESIZE = 35;             //粒子运动幅度系数（值越大粒子摆动范围越大）
         let HEART_COLOR = "#ff69b4";    // 粉红色爱心
         let CORE_PARTICLE_SIZE = 0.4;   // 核心爱心粒子半径
         let EDGE_PARTICLE_SIZE = 0.7;   // 边缘扩散粒子半径
         let CENTER_PARTICLE_SIZE = 0.6; // 中心扩散粒子半径
         let BG_OPACITY = 0.06;          // 背景透明度（值越大背景越不透明）
-        let BG_COLOR = "#000000";       // 背景颜色（纯黑色）
-
+        let BG_COLOR = "#2a0a29";       // 背景颜色（纯黑色）
         // 新增配置变量
-        let HALO_COLOR = "#ffffff";     // 光晕粒子颜色（白色）
-        let EDGE_COLOR = "#ffffff";     // 边缘粒子颜色（白色）
-        let CENTER_COLOR = "#ffffff";   // 中心粒子颜色（白色）
+        let HALO_COLOR = "#ffb6c1";     // 光晕粒子颜色（白色）
+        let EDGE_COLOR =  "#ffc0cb";     // 边缘粒子颜色（白色）
+        let CENTER_COLOR = "#ff69b4";   // 中心粒子颜色（白色）
         let HALO_SIZE = 0.4;            // 光晕粒子半径
 
         // DOM引用
@@ -507,7 +506,7 @@
         }
         
         // 缩放比例 - 添加缩放效果
-        function shrink_ratio(point, ratio = 0.9) {
+        function shrink_ratio(point, ratio = 0.92) {
             // 添加心跳同步的缩放效果
             //const heartbeat = Math.sin(frame / FREQUENCY) * 0.2 + 1;
             const force = 1 / Math.pow(point.x * point.x + point.y * point.y, 1);
