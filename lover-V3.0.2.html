@@ -484,15 +484,10 @@
         // 内部扩散函数 - 使用更自然的随机分布
         function scatter_inside(point, beta = 0.05) {
             // 使用高斯分布创建更自然的粒子分散效果
-            const gaussianRand = () => {
-                let u = 0, v = 0;
-                while(u === 0) u = Math.random();
-                while(v === 0) v = Math.random();
-                return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
-            };
-            
-            const dx = gaussianRand() * beta * point.x;
-            const dy = gaussianRand() * beta * point.y;
+            const ratiox = -Math.log(Math.random()) * beta;
+            const ratioy = -Math.log(Math.random()) * beta;
+            const dx = point.x * ratiox;
+            const dy = point.y * ratioy;
             return {
                 x: point.x - dx,
                 y: point.y - dy
@@ -502,16 +497,9 @@
         // 计算位置 - 优化运动轨迹
         function calculate_position(point, ratio = 0.9) {
             // 添加时间因素使粒子运动更流畅
-            const timeFactor = Math.sin(frame / 100);
             const force = 1 / Math.pow(point.x * point.x + point.y * point.y, 0.6);
-            
-            // 添加随机旋转效果
-            const angle = Math.atan2(point.y, point.x) + timeFactor * 0.1;
-            const radius = force * ratio;
-            
-            const dx = radius * Math.cos(angle);
-            const dy = radius * Math.sin(angle);
-            
+            const dx = point.x * force * ratio + (Math.random() * 2 - 1);
+            const dy = point.y * force * ratio + (Math.random() * 2 - 1);
             return {
                 x: point.x - dx,
                 y: point.y - dy
@@ -521,16 +509,20 @@
         // 缩放比例 - 添加缩放效果
         function shrink_ratio(point, ratio = 0.9) {
             // 添加心跳同步的缩放效果
-            const heartbeat = Math.sin(frame / FREQUENCY) * 0.2 + 1;
+            //const heartbeat = Math.sin(frame / FREQUENCY) * 0.2 + 1;
+            const force = 1 / Math.pow(point.x * point.x + point.y * point.y, 1);
+            const dx = point.x * force * ratio;
+            const dy = point.y * force * ratio;
             return {
-                x: point.x * heartbeat * ratio,
-                y: point.y * heartbeat * ratio
+                x: point.x - dx,
+                y: point.y - dy
             };
         }
         
         // 曲线函数 - 更平滑的动画曲线
         function curve(p) {
             return (Math.sin(p * 8) + Math.sin(p * 4 + 1)) / 3;
+            //return 2 * (2 * Math.sin(4 * p)) / (2 * Math.PI);
         }
         
         // ==================== 粒子初始化 ====================
@@ -559,12 +551,9 @@
             
             // 中心扩散点 - 使用更随机的分布
             for (let i = 0; i < POINTS_NUMBER * 2; i++) {
-                const angle = Math.random() * Math.PI * 2;
-                const radius = Math.pow(Math.random(), 0.5) * 5;
-                centerDiffusionPoints.push({
-                    x: Math.cos(angle) * radius,
-                    y: Math.sin(angle) * radius
-                });
+                const index = Math.floor(Math.random() * POINTS_NUMBER);
+                const p = scatter_inside(points[index], 0.17);
+                centerDiffusionPoints.push(p);
             }
             
             particleCountDisplay.textContent = (points.length + edgeDiffusionPoints.length + centerDiffusionPoints.length).toLocaleString();
@@ -647,14 +636,10 @@
         
         function createHeartExplosion() {
             // 创建爆炸效果 - 从中心向外扩散
-            const explosionCenter = { x: 0, y: 0 };
-            for (let i = 0; i < 50; i++) {
-                const angle = Math.random() * Math.PI * 2;
-                const distance = Math.random() * 20;
-                points.push({
-                    x: Math.cos(angle) * distance,
-                    y: Math.sin(angle) * distance
-                });
+           for (let i = 0; i < 50; i++) {
+                const t = Math.random() * 2 * Math.PI;
+                const p = heart_function(t);
+                points.push(p);
             }
             particleCountDisplay.textContent = (points.length + edgeDiffusionPoints.length + centerDiffusionPoints.length).toLocaleString();
         }
